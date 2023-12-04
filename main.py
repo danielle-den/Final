@@ -62,18 +62,28 @@ def lzma_compress():
 def jpeg_compress():
     for i in range(0,100,10):
         # Encode and save the image with JPEG compression
-        cv2.imwrite('compressed_image_' + str(i) + '.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), i])
+        # Define the compression parameters
+        compression_params = [cv2.IMWRITE_JPEG_QUALITY, i]  # Adjust the quality (0-100), higher is better quality
 
-        # Read and display the compressed image
-        # compressed_image = cv2.imread('compressed_image.jpg')
-        # cv2.imshow('Compressed Image', compressed_image)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
+        # Compress the image
+        success, compressed_image = cv2.imencode('.jpg', image, compression_params) 
+        print("jpeg: ", len(compressed_image))
+        if success:
+            # Save the compressed image
+            cv2.imwrite('compressed_image.jpg', compressed_image)
+
+            # Display the original and compressed images for comparison
+            cv2.imshow('Original Image', image)
+            cv2.imshow('Compressed Image ' + str(i), cv2.imdecode(compressed_image, 1))
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+        else:
+            print("Compression failed.")
 
 print("Uncompressed size: ", image.size)
 
 # gzip_compress()
 # bz2_compress()
 # lzma_compress()
-# jpeg_compress()
+jpeg_compress()
 
